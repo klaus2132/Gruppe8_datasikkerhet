@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: $redirect");
         exit();
     } else {
-        echo "<p style='color: red;'>Feil e-post eller passord!</p>";
+        echo "Feil e-post eller passord!";
     }
 }
 ?>
@@ -22,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h2>Logg inn</h2>

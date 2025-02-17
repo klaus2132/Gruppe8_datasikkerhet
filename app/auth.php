@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php';
+include 'config.php';
 
 function login($email, $password) {
     global $conn;
@@ -10,7 +10,7 @@ function login($email, $password) {
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
         $_SESSION['user_role'] = 'student';
-        return 'dashboard.php';
+        return "dashboard.php";
     }
     
     // Check if the user exists as a lecturer
@@ -18,7 +18,7 @@ function login($email, $password) {
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
         $_SESSION['user_role'] = 'foreleser';
-        return 'dashboard.php';
+        return "dashboard.php";
     }
 
     // Check if the user exists as an admin
@@ -26,7 +26,7 @@ function login($email, $password) {
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
         $_SESSION['user_role'] = 'admin';
-        return 'admin_panel.php';
+        return "dashboard.php"; // admin_panel.php
     }
 
     // Return false if no matching user found
