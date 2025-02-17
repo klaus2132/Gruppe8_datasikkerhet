@@ -9,24 +9,30 @@ function login($email, $password) {
     $sql = "SELECT * FROM students WHERE email='$email' AND password='$password'";
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc(); // Get user data
         $_SESSION['user_role'] = 'student';
-        return "dashboard.php";
+        $_SESSION['user_id'] = $user['student_id']; // Store the student ID in session
+        return "dashboard.php"; // Redirect to the dashboard
     }
     
     // Check if the user exists as a lecturer
     $sql = "SELECT * FROM lecturers WHERE email='$email' AND password='$password'";
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc(); // Get user data
         $_SESSION['user_role'] = 'foreleser';
-        return "dashboard.php";
+        $_SESSION['user_id'] = $user['lecturer_id']; // Store the lecturer ID in session
+        return "dashboard.php"; // Redirect to the dashboard
     }
 
     // Check if the user exists as an admin
     $sql = "SELECT * FROM admin WHERE email='$email' AND password='$password'";
     $result = $conn->query($sql);
     if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc(); // Get user data
         $_SESSION['user_role'] = 'admin';
-        return "dashboard.php"; // admin_panel.php
+        $_SESSION['user_id'] = $user['admin_id']; // Store the admin ID in session
+        return "dashboard.php"; // Redirect to the dashboard (admin_panel.php)
     }
 
     // Return false if no matching user found
