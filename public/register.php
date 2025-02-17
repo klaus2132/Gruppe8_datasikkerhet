@@ -23,14 +23,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<form method="post">
-    <input type="text" name="name" placeholder="Navn" required>
-    <input type="email" name="email" placeholder="E-post" required>
-    <input type="password" name="password" placeholder="Passord" required>
-    <select name="role">
-        <option value="student">Student</option>
-        <option value="foreleser">Foreleser</option>
-        <option value="admin">Admin</option>
-    </select>
-    <button type="submit">Registrer</button>
-</form>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrer Bruker</title>
+</head>
+<body>
+    <h2>Registrer Bruker</h2>
+    <form method="post">
+        <input type="text" name="name" placeholder="Navn" required>
+        <input type="email" name="email" placeholder="E-post" required>
+        <input type="password" name="password" placeholder="Passord" required>
+        <select name="role">
+            <option value="student">Student</option>
+            <option value="foreleser">Foreleser</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit">Registrer</button>
+    </form>
+</body>
+</html>
