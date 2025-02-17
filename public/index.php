@@ -16,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -35,3 +34,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>Har du ikke en konto? <a href="register.php">Registrer deg her</a></p>
 </body>
 </html>
+
