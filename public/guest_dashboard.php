@@ -47,9 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["subject_id"], $_POST["
         }
         $stmt->close();
 
-        // Hent foreleserens informasjon én gang
+        // Hent foreleserens informasjon én gang, inkludert bildet
         $lecturer_sql = "
-            SELECT l.name, l.email
+            SELECT l.name, l.email, l.image_path
             FROM lecturers l
             JOIN subjects s ON s.subject_id = l.subject_id
             WHERE s.subject_id = ?
@@ -57,13 +57,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["subject_id"], $_POST["
         $stmt = $conn->prepare($lecturer_sql);
         $stmt->bind_param("i", $subject_id);
         $stmt->execute();
-        $stmt->bind_result($lecturer_name, $lecturer_email);
+        $stmt->bind_result($lecturer_name, $lecturer_email, $lecturer_image);
         $stmt->fetch(); // Hent én rad med foreleserens informasjon
         $stmt->close();
 
         // Lagre foreleserens informasjon i session
         $_SESSION['lecturer_name'] = $lecturer_name;
         $_SESSION['lecturer_email'] = $lecturer_email;
+        $_SESSION['lecturer_image'] = $lecturer_image;
 
         // Lagre meldinger i sessionen for senere visning
         $_SESSION['messages'] = $messages;
@@ -245,9 +246,12 @@ if (isset($_GET['logout'])) {
         <a href="index.php">Innloggingssiden</a>
         
     <?php else: ?>
-        <!-- Vis foreleserens navn og e-post på toppen -->
+        <!-- Vis foreleserens navn, e-post og bilde -->
         <h3>Foreleser: <?= htmlspecialchars($_SESSION['lecturer_name']) ?></h3>
         <p><strong>E-post:</strong> <?= htmlspecialchars($_SESSION['lecturer_email']) ?></p>
+        <?php if (!empty($_SESSION['lecturer_image'])): ?>
+            <img src="../uploads/<?= htmlspecialchars($_SESSION['lecturer_image']) ?>" alt="Foreleserens bilde" style="max-width: 150px; height: auto;">
+        <?php endif; ?>
 
         <!-- Vis meldinger og kommentarer -->
         <?php if (isset($error)): ?>
