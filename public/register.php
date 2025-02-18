@@ -10,7 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Håndter registreringen basert på rollen
     if ($role == "student") {
-        $sql = "INSERT INTO students (name, email, password) VALUES (?, ?, ?)";
+        // Hent cohort_year fra skjemaet
+        $cohort_year = isset($_POST['cohort_year']) ? $_POST['cohort_year'] : null;
+        
+        // Oppdater SQL for å inkludere cohort_year
+        $sql = "INSERT INTO students (name, email, password, cohort_year) VALUES (?, ?, ?, ?)";
     } elseif ($role == "foreleser") {
         // Sjekk om emnekode er spesifisert
         $subject_id = isset($_POST['subject_id']) ? $_POST['subject_id'] : null;
@@ -21,11 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Forbered SQL-spørringen
     if ($stmt = $conn->prepare($sql)) {
-        // Bind parametrene
-        if ($role == "student" || $role == "admin") {
-            $stmt->bind_param("sss", $name, $email, $password);
+        // Bind parametrene basert på rolle
+        if ($role == "student") {
+            $stmt->bind_param("ssss", $name, $email, $password, $cohort_year);
         } elseif ($role == "foreleser") {
             $stmt->bind_param("ssss", $name, $email, $password, $subject_id);
+        } else {
+            $stmt->bind_param("sss", $name, $email, $password);
         }
 
         // Utfør SQL-spørringen
@@ -45,21 +51,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <form method="post" action="register.php">
     <input type="text" name="name" placeholder="Navn" required>
     <input type="email" name="email" placeholder="E-post" required>
     <input type="password" name="password" placeholder="Passord" required>
-    
-    <select name="role" required>
+
+    <select name="role" id="role" required onchange="toggleFields()">
         <option value="student">Student</option>
         <option value="foreleser">Foreleser</option>
         <option value="admin">Admin</option>
     </select>
-    
-    <div>
-        <!-- Emnekode er ikke nødvendig, så det er ikke nødvendig å vise dette feltet -->
+
+    <!-- Cohort Year (Only for Students) -->
+    <div id="cohortField" style="display: none;">
+        <input type="text" name="cohort_year" placeholder="Kullår (f.eks. 2024)">
+    </div>
+
+    <!-- Subject ID (Only for Lecturers) -->
+    <div id="subjectField" style="display: none;">
         <input type="text" name="subject_id" placeholder="Emnekode (for foreleser)">
     </div>
 
     <button type="submit">Registrer</button>
 </form>
+
+<script>
+function toggleFields() {
+    let role = document.getElementById("role").value;
+    document.getElementById("cohortField").style.display = (role === "student") ? "block" : "none";
+    document.getElementById("subjectField").style.display = (role === "foreleser") ? "block" : "none";
+}
+
+// Run once on page load in case of preselected value
+document.addEventListener("DOMContentLoaded", toggleFields);
+</script>
+
