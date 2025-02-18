@@ -31,6 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit">Logg inn</button>
     </form>
     <p>Har du ikke en konto? <a href="register.php">Registrer deg her</a></p>
+    <br>
+    <p>Her er gjestebrukeren.<a href="guest_dashboard.php">Ta meg dit!</a></p>
 </body>
 </html>
 
