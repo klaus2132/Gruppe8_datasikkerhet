@@ -22,8 +22,10 @@ $user_role = $_SESSION['user_role']; // Access user role
     <p>Du er logget inn som: <?php echo $user_role; ?></p>
     <p>Bruker-ID: <?php echo $user_id; ?></p> <!-- Display user ID -->
 
-    <a href="change_password.php">Bytt passord</a>
+    <a href="send_message.php">Send melding</a>
     <hr>
+    <a href="change_password.php">Bytt passord</a>
+    <br>
     <a href="logout.php">Logg ut</a>
 </body>
 </html>
