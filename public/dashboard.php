@@ -188,10 +188,10 @@ if ($user_role == 'student') {
         <?php else: ?>
             <p>Du har ikke sendt noen meldinger enda.</p>
         <?php endif; ?>
+        <a href="send_message.php">Send melding</a>
+        <br>
     <?php endif; ?>
 
-    <a href="send_message.php">Send melding</a>
-    <br>
     <a href="change_password.php">Bytt passord</a>
     <br>
     <a href="logout.php">Logg ut</a>

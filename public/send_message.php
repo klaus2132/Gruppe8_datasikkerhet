@@ -32,7 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Execute the query
         if ($stmt->execute()) {
-            echo "Melding sendt!";
+            echo "Svar sendt!";
+            header("Location: dashboard.php"); // Redirect back to dashboard after response
+            exit();
         } else {
             echo "Feil under sending av melding: " . $stmt->error;
         }
@@ -56,4 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <textarea name="message" placeholder="Skriv din melding her..." required></textarea>
     <br>
     <button type="submit">Send melding</button>
+
+    <br>
+    <a href="dashboard.php">Tilbake til dashboard</a>
 </form>

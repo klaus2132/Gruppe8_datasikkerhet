@@ -78,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <form method="post" action="register.php">
     <input type="text" name="name" placeholder="Navn" required>
     <input type="email" name="email" placeholder="E-post" required>
@@ -92,19 +91,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Subject Name and Subject Pin (Only for Lecturers) -->
     <div id="subjectField" style="display: none;">
-        <input type="text" name="subject_name" placeholder="Kursnavn" required>
-        <input type="text" name="subject_pin" placeholder="Emne Pin" required>
+        <input type="text" name="subject_name" id="subject_name" placeholder="Kursnavn">
+        <input type="text" name="subject_pin" id="subject_pin" placeholder="Emne Pin">
     </div>
 
     <button type="submit">Registrer</button>
 </form>
 
+<!-- Flytt scriptet hit, like før </body> -->
 <script>
-function toggleFields() {
-    let role = document.getElementById("role").value;
-    document.getElementById("subjectField").style.display = (role === "foreleser") ? "block" : "none";
-}
+document.addEventListener("DOMContentLoaded", function() {
+    function toggleFields() {
+        let role = document.getElementById("role").value;
+        let subjectField = document.getElementById("subjectField");
+        let subjectName = document.getElementById("subject_name");
+        let subjectPin = document.getElementById("subject_pin");
 
-// Run once on page load in case of preselected value
-document.addEventListener("DOMContentLoaded", toggleFields);
+        if (role === "foreleser") {
+            subjectField.style.display = "block";
+            subjectName.setAttribute("required", "required");
+            subjectPin.setAttribute("required", "required");
+        } else {
+            subjectField.style.display = "none";
+            subjectName.removeAttribute("required");
+            subjectPin.removeAttribute("required");
+        }
+    }
+
+    // Kjør funksjonen én gang ved start for å sette riktig visning
+    toggleFields();
+
+    // Legg til event listener for dropdown-endringer
+    document.getElementById("role").addEventListener("change", toggleFields);
+});
 </script>
