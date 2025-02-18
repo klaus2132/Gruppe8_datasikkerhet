@@ -1,75 +1,93 @@
 <?php
-include '../app/config.php';  
-session_start();
+include '../app/config.php';  // Koble til databasen
 
-$selected_subject = null;
+// Håndter visning av meldinger
 $messages = [];
 $responses = [];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subject_id'], $_POST['subject_pin'])) {
-    $subject_id = $_POST['subject_id'];
-    $subject_pin = $_POST['subject_pin'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["subject_id"], $_POST["subject_pin"])) {
+    $subject_id = $_POST["subject_id"];
+    $subject_pin = $_POST["subject_pin"];
 
-    // Sjekk om PIN er riktig
-    $pin_check_sql = "SELECT subject_name FROM subjects WHERE subject_id = ? AND subject_pin = ?";
-    if ($stmt = $conn->prepare($pin_check_sql)) {
-        $stmt->bind_param("is", $subject_id, $subject_pin);
+    // Sjekk om PIN-koden er riktig
+    $check_sql = "SELECT subject_id FROM subjects WHERE subject_id = ? AND subject_pin = ?";
+    $stmt = $conn->prepare($check_sql);
+    $stmt->bind_param("is", $subject_id, $subject_pin);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->close();
+
+        // Hent meldinger for emnet
+        $message_sql = "SELECT message_id, message, created_at FROM messages WHERE subject_id = ? ORDER BY created_at DESC";
+        $stmt = $conn->prepare($message_sql);
+        $stmt->bind_param("i", $subject_id);
         $stmt->execute();
-        $stmt->bind_result($subject_name);
-        if ($stmt->fetch()) {
-            $selected_subject = [
-                'subject_id' => $subject_id,
-                'subject_name' => $subject_name
+        $stmt->bind_result($message_id, $message, $created_at);
+        
+        while ($stmt->fetch()) {
+            $messages[] = [
+                'message_id' => $message_id,
+                'message' => $message,
+                'created_at' => $created_at
             ];
         }
         $stmt->close();
-    }
 
-    // Hent meldinger hvis PIN er riktig
-    if ($selected_subject) {
-        $message_sql = "SELECT message_id, message, created_at FROM messages WHERE subject_id = ? ORDER BY created_at DESC";
-        if ($stmt = $conn->prepare($message_sql)) {
-            $stmt->bind_param("i", $subject_id);
+        // Hent svar til hver melding
+        foreach ($messages as $msg) {
+            $response_sql = "SELECT response, created_at FROM responses WHERE message_id = ? ORDER BY created_at ASC LIMIT 1"; // Kun ett svar
+            $stmt = $conn->prepare($response_sql);
+            $stmt->bind_param("i", $msg['message_id']);
             $stmt->execute();
-            $stmt->bind_result($message_id, $message, $created_at);
-            while ($stmt->fetch()) {
-                $messages[$message_id] = [
-                    'message_id' => $message_id,
-                    'message' => $message,
-                    'created_at' => $created_at,
-                    'response' => null // Legger til plass for svar
+            $stmt->bind_result($response, $response_created_at);
+            if ($stmt->fetch()) {
+                $responses[$msg['message_id']] = [
+                    'response' => $response,
+                    'created_at' => $response_created_at
                 ];
             }
             $stmt->close();
         }
-
-        // Hent svar til hver melding
-        if (!empty($messages)) {
-            $message_ids = array_keys($messages);
-            $placeholders = implode(',', array_fill(0, count($message_ids), '?'));
-
-            $response_sql = "SELECT message_id, response, created_at FROM responses WHERE message_id IN ($placeholders) ORDER BY created_at ASC";
-            if ($stmt = $conn->prepare($response_sql)) {
-                $stmt->bind_param(str_repeat("i", count($message_ids)), ...$message_ids);
-                $stmt->execute();
-                $stmt->bind_result($response_message_id, $response, $response_created_at);
-                
-                while ($stmt->fetch()) {
-                    // Bare lagre første svaret per melding
-                    if ($messages[$response_message_id]['response'] === null) {
-                        $messages[$response_message_id]['response'] = [
-                            'response' => $response,
-                            'created_at' => $response_created_at
-                        ];
-                    }
-                }
-                $stmt->close();
-            }
-        }
+    } else {
+        $error = "Feil PIN-kode eller emne.";
     }
 }
 
-// Hent alle emner (uten PIN)
+// Håndter rapportering av meldinger
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["report_message"])) {
+    $message_id = $_POST["message_id"];
+    $report_reason = $_POST["report_reason"];
+
+    // Sjekk om meldingen allerede er rapportert
+    $check_sql = "SELECT COUNT(*) FROM reported_messages WHERE message_id = ?";
+    $stmt = $conn->prepare($check_sql);
+    $stmt->bind_param("i", $message_id);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($count > 0) {
+        $report_error = "Denne meldingen er allerede rapportert.";
+    } else {
+        // Sett inn rapportering i databasen
+        $report_sql = "INSERT INTO reported_messages (message_id, report_reason, reported_at) VALUES (?, ?, NOW())";
+        $stmt = $conn->prepare($report_sql);
+        $stmt->bind_param("is", $message_id, $report_reason);
+        
+        if ($stmt->execute()) {
+            $report_success = "Meldingen er rapportert!";
+        } else {
+            $report_error = "Feil ved rapportering: " . $conn->error;
+        }
+        
+        $stmt->close();
+    }
+}
+
+// Hent tilgjengelige emner
 $subjects = [];
 $subject_sql = "SELECT subject_id, subject_name FROM subjects";
 $result = $conn->query($subject_sql);
@@ -86,14 +104,14 @@ while ($row = $result->fetch_assoc()) {
     <title>Gjest Dashboard</title>
 </head>
 <body>
-    <h2>Velkommen til gjeste-dashboard</h2>
-
+    <h2>Velkommen til gjestepanelet</h2>
+    
     <form method="post" action="guest_dashboard.php">
         <select name="subject_id" required>
             <option value="" selected disabled>Velg emne</option>
-                <?php foreach ($subjects as $subject): ?>
-                    <option value="<?= $subject['subject_id'] ?>"><?= htmlspecialchars($subject['subject_name']) ?></option>
-                <?php endforeach; ?>
+            <?php foreach ($subjects as $subject): ?>
+                <option value="<?= $subject['subject_id'] ?>"><?= htmlspecialchars($subject['subject_name']) ?></option>
+            <?php endforeach; ?>
         </select>
 
         <label for="subject_pin">Skriv inn PIN:</label>
@@ -102,29 +120,43 @@ while ($row = $result->fetch_assoc()) {
         <button type="submit">Se meldinger</button>
     </form>
 
-    <?php if ($selected_subject): ?>
-        <h3>Meldinger for <?= htmlspecialchars($selected_subject['subject_name']) ?>:</h3>
+    <?php if (isset($error)): ?>
+        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
 
-        <?php if (!empty($messages)): ?>
-            <ul>
-                <?php foreach ($messages as $msg): ?>
-                    <li>
-                        <strong>Anonym student:</strong> <?= htmlspecialchars($msg['message']) ?>
+    <?php if (!empty($messages)): ?>
+        <h3>Meldinger:</h3>
+        <ul>
+            <?php foreach ($messages as $msg): ?>
+                <li>
+                    <strong>Anonym student:</strong> <?= htmlspecialchars($msg['message']) ?>
+                    <br>
+                    <small>Sendt: <?= $msg['created_at'] ?></small>
+
+                    <!-- Rapporteringsskjema -->
+                    <form method="post" action="guest_dashboard.php" style="display: inline;">
+                        <input type="hidden" name="message_id" value="<?= $msg['message_id'] ?>">
                         <br>
-                        <small>Sendt: <?= $msg['created_at'] ?></small>
+                        <input type="text" name="report_reason" placeholder="Begrunnelse" required>
+                        <button type="submit" name="report_message">Rapporter</button>
+                    </form>
 
-                        <?php if ($msg['response']): ?>
-                            <ul>
-                                <li><strong>Foreleser:</strong> <?= htmlspecialchars($msg['response']['response']) ?>
-                                    <br><small>Sendt: <?= $msg['response']['created_at'] ?></small></li>
-                            </ul>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>Ingen meldinger for dette emnet.</p>
-        <?php endif; ?>
+                    <!-- Viser svar hvis det finnes -->
+                    <?php if (isset($responses[$msg['message_id']])): ?>
+                        <ul>
+                            <li><strong>Foreleser:</strong> <?= htmlspecialchars($responses[$msg['message_id']]['response']) ?>
+                                <br><small>Sendt: <?= $responses[$msg['message_id']]['created_at'] ?></small></li>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if (isset($report_success)): ?>
+        <p style="color:green;"><?= htmlspecialchars($report_success) ?></p>
+    <?php elseif (isset($report_error)): ?>
+        <p style="color:red;"><?= htmlspecialchars($report_error) ?></p>
     <?php endif; ?>
     <br>
     <a href="index.php">Gå til innloggingssiden</a>
