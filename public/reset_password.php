@@ -39,11 +39,24 @@ if (isset($_GET['token'])) {
                 }
             }
             // Vis skjema for nytt passord
-            echo '<form method="POST">
+            echo '<!DOCTYPE html>
+            <html lang="no">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Endre passord</title>
+                <!-- Link til CSS-fil -->
+                <link rel="stylesheet" href="styles.css"> <!-- Sørg for at du har riktig sti til CSS-filen -->
+            </head>
+            <body>
+                <h2>Endre passord</h2>
+                <form method="POST">
                     <input type="password" name="password" placeholder="Skriv inn nytt passord" required><br>
                     <input type="password" name="confirm_password" placeholder="Bekreft nytt passord" required><br>
                     <button type="submit">Endre passord</button>
-                  </form>';
+                </form>
+            </body>
+            </html>';
         } else {
             echo "Token har utløpt.";
         }

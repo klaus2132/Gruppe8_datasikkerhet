@@ -98,47 +98,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<form method="post" action="register.php" enctype="multipart/form-data">
-    <input type="text" name="name" placeholder="Navn" required>
-    <input type="email" name="email" placeholder="E-post" required>
-    <input type="password" name="password" placeholder="Passord" required>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrer Bruker</title>
+    
+    <!-- Link til den eksterne CSS-filen -->
+    <link rel="stylesheet" href="styles.css"> <!-- Juster stien etter hvor CSS-filen din ligger -->
+</head>
+<body>
 
-    <select name="role" id="role" required onchange="toggleFields()">
-        <option value="student">Student</option>
-        <option value="foreleser">Foreleser</option>
-    </select>
+    <h2>Registrer Bruker</h2>
+    <form method="post" action="register.php" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Navn" required>
+        <input type="email" name="email" placeholder="E-post" required>
+        <input type="password" name="password" placeholder="Passord" required>
 
-    <div id="subjectField" style="display: none;">
-        <input type="text" name="subject_name" id="subject_name" placeholder="Kursnavn">
-        <input type="text" name="subject_pin" id="subject_pin" placeholder="Emne Pin">
-        <input type="file" name="profile_image" id="profile_image" accept="image/*">
-    </div>
+        <select name="role" id="role" required onchange="toggleFields()">
+            <option value="student">Student</option>
+            <option value="foreleser">Foreleser</option>
+        </select>
 
-    <button type="submit">Registrer</button>
-</form>
+        <div id="subjectField" style="display: none;">
+            <input type="text" name="subject_name" id="subject_name" placeholder="Kursnavn">
+            <input type="text" name="subject_pin" id="subject_pin" placeholder="Emne Pin">
+            <input type="file" name="profile_image" id="profile_image" accept="image/*">
+        </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    function toggleFields() {
-        let role = document.getElementById("role").value;
-        let subjectField = document.getElementById("subjectField");
-        let subjectName = document.getElementById("subject_name");
-        let subjectPin = document.getElementById("subject_pin");
-        let profileImage = document.getElementById("profile_image");
+        <button type="submit">Registrer</button>
+        <br>
+        <a href="index.php">Gå tilbake</a>
+    </form>
 
-        if (role === "foreleser") {
-            subjectField.style.display = "block";
-            subjectName.setAttribute("required", "required");
-            subjectPin.setAttribute("required", "required");
-            profileImage.setAttribute("required", "required");
-        } else {
-            subjectField.style.display = "none";
-            subjectName.removeAttribute("required");
-            subjectPin.removeAttribute("required");
-            profileImage.removeAttribute("required");
-        }
-    }
-    toggleFields();
-    document.getElementById("role").addEventListener("change", toggleFields);
-});
-</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function toggleFields() {
+                let role = document.getElementById("role").value;
+                let subjectField = document.getElementById("subjectField");
+                let subjectName = document.getElementById("subject_name");
+                let subjectPin = document.getElementById("subject_pin");
+                let profileImage = document.getElementById("profile_image");
+
+                if (role === "foreleser") {
+                    subjectField.style.display = "block";
+                    subjectName.setAttribute("required", "required");
+                    subjectPin.setAttribute("required", "required");
+                    profileImage.setAttribute("required", "required");
+                } else {
+                    subjectField.style.display = "none";
+                    subjectName.removeAttribute("required");
+                    subjectPin.removeAttribute("required");
+                    profileImage.removeAttribute("required");
+                }
+            }
+            toggleFields();
+            document.getElementById("role").addEventListener("change", toggleFields);
+        });
+    </script>
+
+</body>
+</html>

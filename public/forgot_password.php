@@ -40,7 +40,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<form method="POST">
-    <input type="email" name="email" placeholder="Skriv inn din e-post" required>
-    <button type="submit">Send tilbakestillingslenke</button>
-</form>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tilbakestill passord</title>
+
+    <!-- Link til CSS-filen -->
+    <link rel="stylesheet" href="styles.css"> <!-- Sørg for at du har riktig sti til din CSS-fil -->
+</head>
+<body>
+
+    <h2>Tilbakestill passord</h2>
+
+    <form method="POST">
+        <input type="email" name="email" placeholder="Skriv inn din e-post" required>
+        <button type="submit">Send tilbakestillingslenke</button>
+    </form>
+    <br>
+    <a href="index.php">Gå tilbake</a>
+
+</body>
+</html>

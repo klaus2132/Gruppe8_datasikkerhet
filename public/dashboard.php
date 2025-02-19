@@ -135,16 +135,14 @@ if ($user_role == 'student') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h2>Velkommen til dashboardet!</h2>
+    <h1>Velkommen til dashboardet!</h1>
     <p>Du er logget inn som: <?php echo $user_role; ?></p>
     
     <?php if ($user_role == 'foreleser'): ?>
-        <h3>Emnet du underviser:</h3>
-        <p><strong>Emnenavn:</strong> <?php echo $subject_name; ?></p>
-
-        <h3>Meldinger for emnet:</h3>
+        <h3>Meldinger for <?php echo $subject_name; ?>:</h3>
         <?php if (!empty($messages)): ?>
             <ul>
                 <?php foreach ($messages as $msg): ?>

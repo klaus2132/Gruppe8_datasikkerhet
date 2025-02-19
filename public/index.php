@@ -22,6 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+
+    <!-- Lenker til den eksterne CSS-filen -->
+    <link rel="stylesheet" href="styles.css">  <!-- Hvis CSS-filen er i samme mappe som denne filen -->
 </head>
 <body>
     <h2>Logg inn</h2>
@@ -37,4 +40,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>Her er gjestebrukeren.<a href="guest_dashboard.php">Ta meg dit!</a></p>
 </body>
 </html>
+
 

@@ -47,18 +47,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<form method="post" action="send_message.php">
-    <select name="subject_id" required>
-        <option value="">Velg kurs</option>
-        <?php while ($row = $subjects_result->fetch_assoc()): ?>
-            <option value="<?= $row['subject_id'] ?>"><?= $row['subject_name'] ?></option>
-        <?php endwhile; ?>
-    </select>
-    <br>
-    <textarea name="message" placeholder="Skriv din melding her..." required></textarea>
-    <br>
-    <button type="submit">Send melding</button>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Melding</title>
+    <!-- Link til CSS-fil -->
+    <link rel="stylesheet" href="styles.css"> <!-- Pass på at stien til CSS-filen er riktig -->
+</head>
+<body>
 
-    <br>
-    <a href="dashboard.php">Tilbake til dashboard</a>
-</form>
+    <h2>Send Melding</h2>
+
+    <form method="post" action="send_message.php">
+        <select name="subject_id" required>
+            <option value="">Velg kurs</option>
+            <?php while ($row = $subjects_result->fetch_assoc()): ?>
+                <option value="<?= $row['subject_id'] ?>"><?= $row['subject_name'] ?></option>
+            <?php endwhile; ?>
+        </select>
+        <br>
+        
+        <textarea name="message" placeholder="Skriv din melding her..." required></textarea>
+        <br>
+        
+        <button type="submit">Send melding</button>
+
+        <br>
+        <a href="dashboard.php">Tilbake til dashboard</a>
+    </form>
+
+</body>
+</html>
