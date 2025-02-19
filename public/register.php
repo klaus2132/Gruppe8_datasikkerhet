@@ -124,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div id="subjectField" style="display: none;">
             <input type="text" name="subject_name" id="subject_name" placeholder="Kursnavn">
             <input type="text" name="subject_pin" id="subject_pin" placeholder="Emne Pin">
+            <p>Legg til bilde her:</p>
             <input type="file" name="profile_image" id="profile_image" accept="image/*">
         </div>
 
