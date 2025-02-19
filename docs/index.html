@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Documentation</title>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; font-family: Arial, sans-serif; flex-direction: column;">
+
+    <h1>Bruker informasjon</h1>
+
+    <div style="max-width: 800px; width: 100%; display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; box-sizing: border-box; justify-content: center;">
+        
+        <!-- Box 1 -->
+        <div style="flex-basis: 100%; max-width: 20rem; text-align: center; border: 1px solid #ccc; padding: 20px;">
+            <h2>Herman Jacobsen</h2>
+            <p><strong>Navn:</strong> Herman Jacobsen</p>
+            <p><strong>Email:</strong> hermanjj@hiof.no</p>
+        </div>
+
+        <!-- Box 2 -->
+        <div style="flex-basis: 100%; max-width: 20rem; text-align: center; border: 1px solid #ccc; padding: 20px;">
+            <h2>Henrik Antonsen</h2>
+            <p><strong>Navn:</strong> Henrik Antonsen</p>
+            <p><strong>Email:</strong> henriant@hiof.no</p>
+        </div>
+
+        <!-- Box 3 -->
+        <div style="flex-basis: 100%; max-width: 20rem; text-align: center; border: 1px solid #ccc; padding: 20px;">
+            <h2>Erik Hankø</h2>
+            <p><strong>Navn:</strong> Erik Hankø</p>
+            <p><strong>Email:</strong> erikhan@hiof.no</p>
+        </div>
+
+        <!-- Box 4 -->
+        <div style="flex-basis: 100%; max-width: 20rem; text-align: center; border: 1px solid #ccc; padding: 20px;">
+            <h2>Klaus Haugnæss</h2>
+            <p><strong>Navn:</strong> Klaus Haugnæss</p>
+            <p><strong>Email:</strong> klaush@hiof.no</p>
+        </div>
+
+    </div>
+
+    <div style="max-width: 800px; width: 100%; padding: 20px; box-sizing: border-box;">
+
+        <h1>Dokumentasjon for Steg 1</h1>
+            
+        <h2>Prosjektbeskrivelse</h2>
+        <p>Vi har utviklet en enkel webapplikasjon som lar studenter sende anonyme meldinger til forelesere om et valgt emne. Forelesere kan lese og svare på disse meldingene. Gjestebrukere kan, dersom de har riktig PIN-kode for et emne, se meldingene og svarene, samt rapportere eller kommentere dem.</p>
+            
+        <h2>Funksjonalitet</h2>
+            
+        <h3>Student</h3>
+        <ul>
+            <li>Registrere seg med navn, e-post, passord og rollen Student.</li>
+            <li>Logge inn og bytte passord.</li>
+            <li>Sende anonyme meldinger til forelesere i valgte emner.</li>
+            <li>Se svar fra forelesere på tidligere meldinger.</li>
+        </ul>
+            
+        <h3>Foreleser</h3>
+        <ul>
+            <li>Registrere seg med navn, e-post, bilde, emnenavn, emnekode og rollen Foreleser.</li>
+            <li>Logge inn og bytte passord.</li>
+            <li>Lese meldinger fra studenter.</li>
+            <li>Svare på meldinger (ett svar per melding).</li>
+            <li>Bruke "glemt passord"-funksjonen, der de mottar mail og får endret passord.</li>
+        </ul>
+            
+        <h3>Gjestebruker (ikke innlogget)</h3>
+        <ul>
+            <li>Se meldinger og svar dersom riktig PIN-kode for et emne er oppgitt.</li>
+            <li>Rapportere upassende meldinger.</li>
+            <li>Kommentere på meldinger fra studenter.</li>
+        </ul>
+            
+        <h2>Øvrige funksjoner</h2>
+        <ul>
+            <li>Implementert funksjon for passordbytte når en bruker er innlogget.</li>
+            <li>"Glemt passord"-funksjon for forelesere.</li>
+            <li>Systemet er utviklet i PHP med Apache-server og MySQL-database.</li>
+        </ul>
+            
+        <h2>Teknologi og utviklingsmetodikk</h2>
+        <ul>
+            <li>Backend utviklet i PHP.</li>
+            <li>Databasehåndtering med MySQL.</li>
+            <li>Webserver satt opp med Apache.</li>
+            <li>Bruk av HTML, CSS og JavaScript for en enkel, men funksjonell brukergrensesnitt.</li>
+            <li>Vi har brukt ChatGPT og diverse guider på nettet som hjelpemiddel for utviklingen.</li>
+        </ul>
+            
+        <h2>Begrensninger</h2>
+        <ul>
+            <li>Foreløpig ingen administrator-funksjonalitet implementert.</li>
+            <li>Ingen støtte for flere forelesere per emne.</li>
+            <li>Minimalistisk design for å fokusere på funksjonalitet.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
+
