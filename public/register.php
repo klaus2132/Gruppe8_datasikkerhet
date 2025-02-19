@@ -106,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <select name="role" id="role" required onchange="toggleFields()">
         <option value="student">Student</option>
         <option value="foreleser">Foreleser</option>
-        <option value="admin">Admin</option>
     </select>
 
     <div id="subjectField" style="display: none;">
