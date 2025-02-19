@@ -10,7 +10,5 @@ $conn = new mysqli($host, $username, $password, $dbname);
 // Sjekk tilkoblingen
 if ($conn->connect_error) {
     die("Tilkobling mislyktes: " . $conn->connect_error);
-} else {
-    echo "Tilkobling til databasen er vellykket!";
 }
 ?>
